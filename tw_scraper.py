@@ -171,9 +171,13 @@ def extract_classes(urls, file):
     file.write("{\n")
     is_first = True
     for url in urls:
+        print(f"Fetching url: {url}...")
         res = requests.get(url)
 
         soup = BeautifulSoup(res.text, "html.parser")
+
+        header_title = soup.header.div.div.text
+        print(f"Extracting content of {header_title}...")
 
         for row in soup.tbody:
             # add comma and new line to all lines except for the last one
