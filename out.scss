@@ -1,0 +1,44 @@
+.stop {
+display: flex;
+height: 6rem; /* 96px */
+width: 100%;
+flex-direction: row;
+align-items: center;
+border-radius: 1rem; /* 16px */
+background-color: rgb(255 255 255);
+padding-top: 1rem; /* 16px */ padding-bottom: 1rem; /* 16px */
+padding-left: 0.5rem; /* 8px */
+
+  .stopLeft {
+width: 20%;
+padding-left: 0.25rem; /* 4px */ padding-right: 0.25rem; /* 4px */
+
+    .shotName {
+border-radius: 0.5rem; /* 8px */
+background-color: rgb(59 130 246);
+padding: 0.5rem; /* 8px */
+text-align: center;
+    }
+  }
+
+  .stopRight {
+display: flex;
+width: 80%;
+flex-direction: row;
+
+    .longName {
+display: flex;
+width: 66.666667%;
+align-items: center;
+padding-left: 0.5rem; /* 8px */ padding-right: 0.5rem; /* 8px */
+text-align: left;
+    }
+
+    .arrivalTime {
+display: flex;
+width: 33.333333%;
+flex-direction: column;
+    }
+  }
+}
+
