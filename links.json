@@ -1,10 +1,5 @@
-#!/usr/bin/env python3
-
-import sys
-import requests
-from bs4 import BeautifulSoup
-
-urls = [
+{
+  "links": [
     "https://tailwindcss.com/docs/aspect-ratio",
     "https://tailwindcss.com/docs/columns",
     "https://tailwindcss.com/docs/break-after",
@@ -163,85 +158,6 @@ urls = [
     "https://tailwindcss.com/docs/fill",
     "https://tailwindcss.com/docs/stroke",
     "https://tailwindcss.com/docs/stroke-width",
-    "https://tailwindcss.com/docs/screen-readers",
-]
-
-
-def extract_classes(urls, file):
-    file.write("{\n")
-    is_first = True
-    for url in urls:
-        print(f"Fetching url: {url}...")
-        res = requests.get(url)
-
-        soup = BeautifulSoup(res.text, "html.parser")
-
-        header_title = soup.header.div.div.text
-        print(f"Extracting content of {header_title}...")
-
-        for row in soup.tbody:
-            # add comma and new line to all lines except for the last one
-            if is_first:
-                is_first = False
-            else:
-                file.write(",\n")
-            tw_class = row.contents[0].text
-            scss_class = row.contents[1].text
-            scss_class = scss_class.strip().replace("\n", " ").replace('"', "'")
-            file.write(f'    "{tw_class}": "{scss_class}"')
-
-    file.write("\n}\n")
-    file.close()
-
-
-def fetch_tw_links(file):
-    url = "https://tailwindcss.com/docs/installation"
-    res = requests.get(url)
-    soup = BeautifulSoup(res.text, "html.parser")
-
-    nav = soup.find(id="nav")
-    lis = nav.contents[1].find_all("li", class_="mt-12 lg:mt-8")
-
-    file.write('{\n  "links": [\n')
-    is_first = True
-
-    write_to_file = False
-    for li in lis:
-        title_text = li.h5.text
-
-        if title_text == "Layout":
-            write_to_file = True
-        elif title_text == "Official Plugins":
-            write_to_file = False
-
-        links = li.find_all("a")
-        for el in links:
-            if write_to_file:
-                if el.text == "Container":
-                    continue
-                if is_first:
-                    is_first = False
-                else:
-                    file.write(",\n")
-                file.write(f'    "https://tailwindcss.com{el["href"]}"')
-
-    file.write("\n  ]\n}")
-
-
-def main():
-    action = sys.argv[1]
-
-    if action == "links":
-        with open("links.json", "w") as file:
-            fetch_tw_links(file)
-    elif action == "json":
-        with open("tw_to_scss.json", "w") as file:
-            extract_classes(urls, file)
-    else:
-        print(
-            f"Usage:\n{sys.argv[0]} [links|json]\n-  links: Generate links to fetch tailwind classes from\n-  json: Generate json from tailwind documentation fetched from generated links"
-        )
-
-
-if __name__ == "__main__":
-    main()
+    "https://tailwindcss.com/docs/screen-readers"
+  ]
+}
