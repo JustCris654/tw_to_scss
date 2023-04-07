@@ -4,6 +4,19 @@ import sys
 import io
 import json
 
+media_queries = {
+    "sm": "@media (min-width: 640px) {$}",
+    "md": "@media (min-width: 768px) {$}",
+    "lg": "@media (min-width: 1024px) {$}",
+    "xl": "@media (min-width: 1280px) {$}",
+    "2xl": "@media (min-width: 1536px) {$}",
+}
+
+states = {
+    "hover": ":hover {$}",
+    "focus": ":focus {$}",
+}
+
 
 def convert_line_and_write(line: str, twtoscss_dict: dict, out: io.StringIO):
     stripped_line = line.strip()
@@ -12,11 +25,35 @@ def convert_line_and_write(line: str, twtoscss_dict: dict, out: io.StringIO):
         out.write("\n")
         return
 
-    tw_classes = stripped_line.split(" ")
+    tw_classes: [str] = stripped_line.split(" ")
     for tw_class in tw_classes:
+        # check if its a media query or state
+        # i could've checked splitted lenght but this if
+        # seems more readable to me
+        if ":" in tw_class:
+            splitted = tw_class.split(":")
+            if splitted[0] in media_queries:
+                scss_to_write = (
+                    media_queries[splitted[0]].replace(
+                        "$", f"\n  {twtoscss_dict[splitted[1]]}\n"
+                    )
+                    + "\n"
+                )
+            elif splitted[0] in states:
+                scss_to_write = (
+                    "&"
+                    + states[splitted[0]].replace(
+                        "$", f"\n  {twtoscss_dict[splitted[1]]}\n"
+                    )
+                    + "\n"
+                )
+            print(scss_to_write)
+            out.write(scss_to_write)
+
         if tw_class in twtoscss_dict:
-            print(twtoscss_dict[tw_class])
-            out.write(f"{twtoscss_dict[tw_class]}\n")
+            scss_to_write = f"{twtoscss_dict[tw_class]}\n"
+            print(scss_to_write)
+            out.write(scss_to_write)
         else:
             # TODO: implement not tailwind class
             pass
