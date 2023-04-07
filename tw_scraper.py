@@ -35,11 +35,14 @@ def extract_classes(urls, file):
 
 def fetch_tw_links(file):
     url = "https://tailwindcss.com/docs/installation"
+    print(f"Fetching tailwind links from url: {url}...")
     res = requests.get(url)
     soup = BeautifulSoup(res.text, "html.parser")
 
     nav = soup.find(id="nav")
     lis = nav.contents[1].find_all("li", class_="mt-12 lg:mt-8")
+
+    print("Generating JSON array with all links...")
 
     file.write('{\n  "links": [\n')
     is_first = True
@@ -81,6 +84,15 @@ def main():
         with open(links_file_name, "w") as file:
             fetch_tw_links(file)
     elif action == "json":
+        urls = get_links_from_json(links_file_name)
+        with open("tw_to_scss.json", "w") as file:
+            extract_classes(urls, file)
+    elif action == "links-and-json":
+        # scrape links
+        with open(links_file_name, "w") as file:
+            fetch_tw_links(file)
+
+        # scrape tw to css classes and generate json
         urls = get_links_from_json(links_file_name)
         with open("tw_to_scss.json", "w") as file:
             extract_classes(urls, file)
