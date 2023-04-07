@@ -1,3 +1,23 @@
-.distanceYellow {
-  w-full rounded-lg p-3 md:bg-yellow-300 hover:flex
+.stop {
+  flex h-24 w-full flex-row items-center rounded-2xl bg-white py-4 pl-2 hover:block md:bg-yellow-300
+
+  .stopLeft {
+    w-1/5 px-1
+
+    .shotName {
+      rounded-lg bg-blue-500 p-2 text-center
+    }
+  }
+
+  .stopRight {
+    flex w-4/5 flex-row
+
+    .longName {
+      flex w-4/6 items-center px-2 text-left
+    }
+
+    .arrivalTime {
+      flex w-2/6 flex-col
+    }
+  }
 }
